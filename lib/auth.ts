@@ -32,11 +32,7 @@ export const authoptions = {
         name: token.name,
         email: token.email,
         picture: token.picture,
-        sub: token.sub,
         accessToken: token.accessToken,
-        iat: token.iat,
-        exp: token.exp,
-        jti: token.jti,
         id: token.id,
       };
       return session;
@@ -49,7 +45,7 @@ export const authoptions = {
         token.email = profile.email;
       }
       token.id = token.sub;
-     
+
       return token;
     },
   },
