@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [selectedNumber, setSelectedNumber] = useState(15);
-  const [re, setRe] = useState(false)
+  const [re, setRe] = useState(false);
 
   const handleChange = (event: any) => {
     setSelectedNumber(event.target.value);
@@ -69,7 +69,6 @@ export default function Home() {
       },
     });
     setModifyData(res.data);
-    
   };
 
   useEffect(() => {

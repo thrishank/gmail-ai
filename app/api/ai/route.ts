@@ -28,7 +28,6 @@ async function classify(text: string) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const classifiedData = await Promise.all(
-    
     body.map(async (item: any) => {
       const type = await classify(
         Buffer.from(item.fullMsg, 'base64').toString('utf-8'),
