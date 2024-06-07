@@ -3,7 +3,7 @@ import { google } from 'googleapis';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, res: NextResponse) {
   const session = await getServerSession(authoptions);
   if (!session) return NextResponse.json('Not authorized');
 
@@ -29,8 +29,9 @@ export async function GET(req: NextRequest) {
         return msg.data;
       }),
     );
-    return NextResponse.json(messages);
+
+    return NextResponse.json(messages, { status: 200 });
   } catch (Err) {
-    return NextResponse.json(Err);
+    return NextResponse.json(Err, { status: 400 });
   }
 }

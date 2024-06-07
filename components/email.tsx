@@ -26,7 +26,6 @@ export function EmailCard({
 
   const [selectedEmail, setSelectedEmail] = useState<string | null>(null);
 
-  console.log(type);
   return (
     <div
       className={`mb-4 cursor-pointer rounded-lg border-2 p-4`}
@@ -37,14 +36,16 @@ export function EmailCard({
         {type && <span className={`font-bold ${currentStyle}`}>{type}</span>}
       </div>
       <p className="font-normal">{msg}</p>
-      {selectedEmail === name && (
+      {typeof fullEmail === 'string' && selectedEmail === name && (
         <div className="absolute right-0 top-0 h-full w-1/2 overflow-y-auto bg-gray-200 bg-opacity-50 p-4 backdrop-blur-lg">
           <h1 onClick={() => setSelectedEmail(null)} className="cursor-pointer">
             Close
           </h1>
           <div
             className="email-content mt-4"
-            dangerouslySetInnerHTML={{ __html: fullEmail || '' }}
+            dangerouslySetInnerHTML={{
+              __html: Buffer.from(fullEmail, 'base64').toString('utf-8'),
+            }}
           />
         </div>
       )}

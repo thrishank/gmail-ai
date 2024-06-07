@@ -1,11 +1,11 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const genAI = new GoogleGenerativeAI('AIzaSyDjJ9gUbceGyqZtubkJ3XeoyHY4vDgl_9I');
 
 const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-async function classify(text: string) {
+async function classify(text: string): Promise<string | null> {
   const prompt = `Classify the following email into one of this six categories 
                   Important: Emails that are personal or work-related and require immediate attention
                   Promotions: Emails related to sales, discounts, and marketing campaigns.
@@ -18,24 +18,35 @@ async function classify(text: string) {
   try {
     const result = await model.generateContent(prompt);
     const res = result.response;
-    console.log(res.text());
     return res.text();
   } catch (err) {
-    console.log(err);
+    console.error(`Error classifying text: ${text.substring(5000)}`, err);
+    return null;
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const body = await req.json();
-  const classifiedData = await Promise.all(
-    body.map(async (item: any) => {
+  const data: (string | null)[] = [];
+
+  try {
+    const promises = body.map(async (item: any) => {
+      const fullMsg = item.fullMsg;
+      if (typeof fullMsg !== 'string') {
+        return null;
+      }
       const type = await classify(
         Buffer.from(item.fullMsg, 'base64').toString('utf-8'),
       );
-      item.category = type?.split(' ')[0] || '';
-      return item;
-    }),
-  );
+      return type?.split(' ')[0] || '';
+    });
 
-  return NextResponse.json(classifiedData);
+    const resolvedTypes = await Promise.all(promises);
+    data.push(...resolvedTypes.filter((type): type is string => type !== null));
+
+    return NextResponse.json(data, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json('failed', { status: 400 });
+  }
 }

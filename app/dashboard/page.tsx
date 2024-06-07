@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [selectedNumber, setSelectedNumber] = useState(15);
-  const [re, setRe] = useState(false);
 
   const handleChange = (event: any) => {
     setSelectedNumber(event.target.value);
@@ -53,14 +52,15 @@ export default function Home() {
       fullMsg: '',
     },
   ]);
-
   useEffect(() => {
     async function getData() {
       const res = await axios.get(`/api/gmail?count=${selectedNumber}`);
-      setEmailData(res.data);
+      if (res.status === 200) setEmailData(res.data);
     }
     getData();
   }, [selectedNumber]);
+
+  const [emailType, setEmailType] = useState([]);
 
   const handleClassify = async () => {
     const res = await axios.post(`/api/ai`, modifyData, {
@@ -68,8 +68,40 @@ export default function Home() {
         'Content-Type': 'application/json',
       },
     });
-    setModifyData(res.data);
+    if (res.status === 200) setEmailType(res.data);
   };
+
+  function getMessageBody(item: any) {
+    // Check for the first case
+    const htmlPartData = item.payload?.parts?.find(
+      (part: any) => part.mimeType === 'text/html',
+    )?.body.data;
+
+    if (htmlPartData) {
+      return htmlPartData;
+    }
+
+    // If the first case is false, check if body.data exists
+    if (item.payload.body.data) {
+      return item.payload.body.data;
+    }
+
+    // If both cases are false, check for parts with mimeType "multipart/alternative"
+    const alternativePart = item.payload.parts?.find(
+      (part: any) => part.mimeType === 'multipart/alternative',
+    );
+
+    if (
+      alternativePart &&
+      alternativePart.parts &&
+      alternativePart.parts.length > 1
+    ) {
+      return alternativePart.parts[1].body.data;
+    }
+
+    // If none of the cases match, return null or handle the case accordingly
+    return null;
+  }
 
   useEffect(() => {
     setModifyData(
@@ -127,8 +159,8 @@ export default function Home() {
           msg={item.msg}
           name={item.from}
           key={idx}
-          fullEmail={Buffer.from(item.fullMsg, 'base64').toString('utf-8')}
-          type={item.category}
+          fullEmail={item.fullMsg}
+          type={emailType[idx]}
         />
       ))}
     </div>
