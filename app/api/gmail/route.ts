@@ -3,9 +3,12 @@ import { google } from 'googleapis';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   const session = await getServerSession(authoptions);
   if (!session) return NextResponse.json('Not authorized');
+
+  const { searchParams } = new URL(req.url);
+  const maxMsgs = Number(searchParams.get('count'));
 
   const auth = new google.auth.OAuth2();
   auth.setCredentials({ access_token: session.user.accessToken });
@@ -16,7 +19,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
   try {
     const response = await gmail.users.messages.list({
       userId: 'me',
-      maxResults: 5,
+      maxResults: maxMsgs,
+      q: 'to:me -from:me',
     });
     const messageIds = response.data.messages?.map((item) => item.id) || [];
     const messages = await Promise.all(
