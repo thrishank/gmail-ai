@@ -21,7 +21,7 @@ export const authoptions = {
       authorization: {
         params: {
           scope:
-            'openid email profile https://www.googleapis.com/auth/gmail.readonly',
+            'openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/userinfo.profile',
         },
       },
     }),
@@ -48,6 +48,10 @@ export const authoptions = {
 
       return token;
     },
+    // signIn: async ({ user, account, profile }: any) => {
+    //   console.log('FDasf');
+    //   console.log(user, account, profile);
+    // },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {

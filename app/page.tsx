@@ -1,5 +1,5 @@
 'use client';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Login from './signin/page';
 import Home from './dashboard/page';
 

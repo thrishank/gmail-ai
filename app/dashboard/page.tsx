@@ -71,38 +71,6 @@ export default function Home() {
     if (res.status === 200) setEmailType(res.data);
   };
 
-  function getMessageBody(item: any) {
-    // Check for the first case
-    const htmlPartData = item.payload?.parts?.find(
-      (part: any) => part.mimeType === 'text/html',
-    )?.body.data;
-
-    if (htmlPartData) {
-      return htmlPartData;
-    }
-
-    // If the first case is false, check if body.data exists
-    if (item.payload.body.data) {
-      return item.payload.body.data;
-    }
-
-    // If both cases are false, check for parts with mimeType "multipart/alternative"
-    const alternativePart = item.payload.parts?.find(
-      (part: any) => part.mimeType === 'multipart/alternative',
-    );
-
-    if (
-      alternativePart &&
-      alternativePart.parts &&
-      alternativePart.parts.length > 1
-    ) {
-      return alternativePart.parts[1].body.data;
-    }
-
-    // If none of the cases match, return null or handle the case accordingly
-    return null;
-  }
-
   useEffect(() => {
     setModifyData(
       emailData.map((item) => {
@@ -128,7 +96,7 @@ export default function Home() {
       <Top
         name={session.data?.user?.name}
         email={session.data?.user?.email}
-        img={session.data?.user?.image}
+        img={session.data?.user?.picture}
       />
       <div className="flex justify-evenly">
         <div className="relative inline-block text-gray-700">
