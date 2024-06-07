@@ -13,7 +13,7 @@ export default function Home() {
     setSelectedNumber(event.target.value);
   };
 
-  const session = useSession();
+  const session: any = useSession();
   const router = useRouter();
   if (!session?.data?.user) {
     router.push('/signin');
