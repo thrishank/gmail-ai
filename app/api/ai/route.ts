@@ -5,11 +5,10 @@ async function classify(
   emails: Array<{ text: string; fulltext?: string }>,
   apikey: string,
 ): Promise<Array<string | null>> {
-
-  if(apikey === 'null'){
-    apikey = "AIzaSyDjJ9gUbceGyqZtubkJ3XeoyHY4vDgl_9I"
+  if (apikey === 'null') {
+    apikey = 'AIzaSyDjJ9gUbceGyqZtubkJ3XeoyHY4vDgl_9I';
   }
-  
+
   const genAI = new GoogleGenerativeAI(apikey);
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 

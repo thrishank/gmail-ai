@@ -38,9 +38,16 @@ export function EmailCard({
       <p className="font-normal">{msg}</p>
       {typeof fullEmail === 'string' && selectedEmail === name && (
         <div className="absolute right-0 top-0 h-full w-1/2 overflow-y-auto bg-gray-200 bg-opacity-50 p-4 backdrop-blur-lg">
-          <h1 onClick={() => setSelectedEmail(null)} className="cursor-pointer">
+          <h1 onClick={() => setSelectedEmail(null)} className="cursor-pointer flex justify-end">
             Close
           </h1>
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-xl font-bold">{name}</h2>
+            {type && (
+              <span className={`font-bold ${currentStyle}`}>{type}</span>
+            )}
+          </div>
+
           <div
             className="email-content mt-4"
             dangerouslySetInnerHTML={{

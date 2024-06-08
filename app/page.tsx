@@ -5,10 +5,12 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { PulseLoader } from 'react-spinners';
 
 export default function Home() {
-  const [selectedNumber, setSelectedNumber] = useState(1);
-
+  const [selectedNumber, setSelectedNumber] = useState(15);
+  const [loading, setLoading] = useState(false);
+  const [lodaingtext, setLoadingtext] = useState('');
   const handleChange = (event: any) => {
     setSelectedNumber(event.target.value);
   };
@@ -50,10 +52,33 @@ export default function Home() {
       fullMsg: '',
     },
   ]);
+
   useEffect(() => {
     async function getData() {
-      const res = await axios.get(`/api/gmail?count=${selectedNumber}`);
-      if (res.status === 200) setEmailData(res.data);
+      setLoading(true);
+      setLoadingtext('Fetching Your Emails...');
+      try {
+        const res = await axios.get(`/api/gmail?count=${selectedNumber}`);
+        if (res.status === 200) {
+          setEmailData(res.data);
+          setLoading(false);
+        } else {
+          setLoading(false);
+          throw new Error('Failed to fetch data');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setEmailData([
+          {
+            snippet: 'Error fetching the emails',
+            payload: {
+              headers: [{ name: '', value: '' }],
+              body: { data: '' },
+              parts: [{ mimeType: '', body: { data: '' } }],
+            },
+          },
+        ]);
+      }
     }
     getData();
   }, [selectedNumber]);
@@ -63,7 +88,10 @@ export default function Home() {
   if (typeof window !== undefined) {
     var apikey = localStorage.getItem('apiKey');
   }
+
   const handleClassify = async () => {
+    setLoading(true);
+    setLoadingtext('Classifying your emails with gemini API');
     const res = await axios.post(
       `/api/ai`,
       { apikey, modifyData },
@@ -73,7 +101,10 @@ export default function Home() {
         },
       },
     );
-    if (res.status === 200) setEmailType(res.data);
+    if (res.status === 200) {
+      setEmailType(res.data);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -97,14 +128,14 @@ export default function Home() {
   }, [emailData]);
 
   return (
-    <div>
+    <div className="mx-auto w-1/2">
       <Top
         name={session.data?.user?.name}
         email={session.data?.user?.email}
         img={session.data?.user?.picture}
       />
-      <div className="flex justify-evenly">
-        <div className="relative inline-block text-gray-700">
+      <div className="flex justify-evenly p-4">
+        <div className="relative">
           <select
             value={selectedNumber}
             onChange={handleChange}
@@ -115,7 +146,7 @@ export default function Home() {
             <option value="50">50</option>
             <option value="100">100</option>
           </select>
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-2">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
             <svg
               className="h-4 w-4 fill-current text-gray-600"
               xmlns="http://www.w3.org/2000/svg"
@@ -125,8 +156,28 @@ export default function Home() {
             </svg>
           </div>
         </div>
-        <button onClick={handleClassify}>Classify</button>
+        <button
+          onClick={handleClassify}
+          className="rounded bg-green-500 px-4 py-2 font-bold text-white"
+        >
+          Classify
+        </button>
       </div>
+
+      {loading && (
+        <div className="mt-4 flex flex-col items-center justify-center py-8">
+          <PulseLoader
+            color={'#7df9ff'}
+            loading={loading}
+            size={50}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+          {''}
+          <p>{lodaingtext}</p>
+        </div>
+      )}
+
       {modifyData.map((item, idx) => (
         <EmailCard
           msg={item.msg}
