@@ -24,9 +24,9 @@ async function classify(
 
   emails.forEach((email, index) => {
     prompt += `\n\nEmail ${index + 1}: ${email.text}`;
-    if (typeof email.fulltext === 'string') {
-      prompt += `\nFull text: ${Buffer.from(email.fulltext, 'base64').toString('utf-8')}`;
-    }
+    // if (typeof email.fulltext === 'string') {
+    //   prompt += `\nFull text: ${Buffer.from(email.fulltext, 'base64').toString('utf-8')}`;
+    // }
   });
 
   prompt += `\n\nReturn the results in a single line like this "Important, General, etc`;
