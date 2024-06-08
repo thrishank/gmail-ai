@@ -53,6 +53,7 @@ export default function Login() {
             To get the google gemini API key go to the{' '}
             <a
               href="https://aistudio.google.com/app/apikey"
+              target="blank"
               className="text-blue-500 underline"
             >
               Google AI Studio
