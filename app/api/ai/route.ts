@@ -1,3 +1,4 @@
+import { intailPrompt } from '@/lib/data';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 
@@ -12,15 +13,7 @@ async function classify(
   const genAI = new GoogleGenerativeAI(apikey);
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-  let prompt = `Classify the following emails into one of these six categories:
-  Important : Emails that are personal or work-related and require immediate attention.
-  Promotions: Emails related to sales, discounts, and marketing campaigns.
-  Social    : Emails from social networks, friends, and family.
-  Marketing : Emails related to marketing, newsletters, and notifications.
-  Spam      : Unwanted or unsolicited emails.
-  General   : If none of the above are matched, use General.
-              Your answer should be just one word from the above for each email.
-              Here are the emails:`;
+  let prompt = intailPrompt;
 
   emails.forEach((email, index) => {
     prompt += `\n\nEmail ${index + 1}: ${email.text}`;
@@ -48,13 +41,16 @@ async function classify(
 
 export async function POST(req: Request) {
   const { modifyData, apikey } = await req.json();
+
   try {
     const emails = modifyData.map((item: any) => ({
       text: item.msg,
       fulltext: item.fullMsg,
     }));
+
     const resolvedTypes = await classify(emails, apikey);
     const data = resolvedTypes.filter((type) => type !== 'Error');
+
     console.log(data);
     return NextResponse.json(data, { status: 200 });
   } catch (err) {

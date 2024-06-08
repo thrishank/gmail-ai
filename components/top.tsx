@@ -1,6 +1,14 @@
 import { signOut } from 'next-auth/react';
 
-export function Top({ img, name, email }: any) {
+export function Top({
+  img,
+  name,
+  email,
+}: {
+  img?: string;
+  name: string;
+  email: string;
+}) {
   return (
     <div className="mt-8 flex justify-evenly">
       <div className="flex items-center">

@@ -1,3 +1,11 @@
+/**
+ * This is the Signin page which  allows users to log in using their Google account.
+ * Users can enter their Gemini AI API key to authenticate.
+ * If the API key is provided, it is stored in localStorage.
+ * If the user is already authenticated, they are redirected to the homepage.
+ * Users can click on the Google login button to initiate the login process.
+ */
+
 'use client';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -52,7 +60,7 @@ export default function Login() {
             and create one or if your lazy just enter{' '}
             <span className="font-bold">null</span> to use my api key
           </p>
-          <Image
+          {/* <Image
             src={'/image.png'}
             width={400}
             height={100}
@@ -67,7 +75,7 @@ export default function Login() {
 
           <h2 className="mt-4 font-bold">
             To test the website click on the advanced and procced
-          </h2>
+          </h2> */}
         </div>
       </div>
     </div>

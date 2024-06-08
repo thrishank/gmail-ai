@@ -3,11 +3,12 @@
 This project is a Gmail AI application that uses Google's Generative AI and Google
 s Gemini API to classify emails into different categories. It integrates with Gmail to help users manage and organize their emails efficiently.
 
-### Key Features
+### Tech Stack & Key Features
 
-- **Frontend**: Built using Next.js for a modern and responsive user interface.
-- **Integration**: Uses Google's Gemini API and Gmail API for email classification.
-- **Authentication**: Implements user authentication using next-auth.
+- **Frontend**: Built using Next.js and tailwind CSS for styling.
+- **Backend**: Next.js API routes
+- **Authentication**: Implements Google Oauth user authentication using next-auth.
+- **Integration**: Get's the last X emails of the user using the Gmail API and Uses Google's Gemini API for email classification.
 - **Email Classification**: Classifies emails into predefined categories such as Important, Promotions, Social, Marketing, Spam, and General.
 - **User Interface**: Provides an intuitive interface for users to view and classify their emails.
 
@@ -25,7 +26,11 @@ s Gemini API to classify emails into different categories. It integrates with Gm
    ```sh
    npm install
    ```
-4. Set up environment variables.
+4. Copy the content from .env.example and create a new file named .env with the copied content.
+
+   ```sh
+   cp .env.example .env
+   ```
 
    - `GOOGLE_CLIENT_ID`: Google client ID for authentication.
    - `GOOGLE_CLIENT_SECRET`: Google client secret for authentication.
@@ -49,13 +54,6 @@ s Gemini API to classify emails into different categories. It integrates with Gm
 - `npm run dev`: Starts the development server.
 - `npm run build`: Builds the project for production.
 - `npm run start`: Starts the production server.
-
-### Dependencies
-
-- Next.js
-- Googleapis
-- Tailwind CSS
-- Axios
 
 ### Additional Notes
 

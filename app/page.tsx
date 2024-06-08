@@ -1,8 +1,9 @@
 'use client';
 import { EmailCard } from '@/components/email';
 import { Top } from '@/components/top';
+import { emailDataBody } from '@/lib/data';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { PulseLoader } from 'react-spinners';
@@ -11,40 +12,7 @@ export default function Home() {
   const [selectedNumber, setSelectedNumber] = useState(15);
   const [loading, setLoading] = useState(false);
   const [lodaingtext, setLoadingtext] = useState('');
-  const handleChange = (event: any) => {
-    setSelectedNumber(event.target.value);
-  };
-
-  const session: any = useSession();
-  if (!session?.data?.user) {
-    redirect('/signin');
-  }
-
-  const [emailData, setEmailData] = useState([
-    {
-      snippet: '',
-      payload: {
-        headers: [
-          {
-            name: '',
-            value: '',
-          },
-        ],
-        body: {
-          data: '',
-        },
-        parts: [
-          {
-            mimeType: '',
-            body: {
-              data: '',
-            },
-          },
-        ],
-      },
-    },
-  ]);
-
+  const [emailData, setEmailData] = useState([emailDataBody]);
   const [modifyData, setModifyData] = useState([
     {
       msg: '',
@@ -52,6 +20,15 @@ export default function Home() {
       fullMsg: '',
     },
   ]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedNumber(parseInt(event.target.value, 10));
+  };
+
+  const session: any = useSession();
+  if (!session?.data?.user) {
+    redirect('/signin');
+  }
 
   useEffect(() => {
     async function getData() {
@@ -78,6 +55,8 @@ export default function Home() {
             },
           },
         ]);
+        signOut();
+        redirect('signin/');
       }
     }
     getData();
@@ -128,7 +107,7 @@ export default function Home() {
   }, [emailData]);
 
   return (
-    <div className="mx-auto w-1/2">
+    <div className="sm:mx-auto sm:w-1/2">
       <Top
         name={session.data?.user?.name}
         email={session.data?.user?.email}
@@ -141,10 +120,10 @@ export default function Home() {
             onChange={handleChange}
             className="focus:shadow-outline block w-full appearance-none rounded border border-gray-300 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none"
           >
+            <option value="5">5</option>
             <option value="15">15</option>
             <option value="30">30</option>
             <option value="50">50</option>
-            <option value="100">100</option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
             <svg

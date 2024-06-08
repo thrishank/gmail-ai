@@ -35,6 +35,7 @@ export const authoptions = {
         accessToken: token.accessToken,
         id: token.id,
       };
+      console.log(token.email);
       return session;
     },
     async jwt({ token, account, profile }: any) {
