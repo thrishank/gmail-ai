@@ -1,4 +1,3 @@
-import { colors } from '@/lib/data';
 import React, { useState } from 'react';
 
 export function EmailCard({
@@ -12,7 +11,15 @@ export function EmailCard({
   type?: any;
   fullEmail?: string;
 }) {
-  const typeStyles: any = colors;
+  const typeStyles: any = {
+    Important: 'border-green-500 text-green-500',
+    Social: 'border-blue-500 text-blue-500',
+    Promotions: 'border-[#800080] text-[#800080]',
+    Marketing: 'border-yellow-500 text-yellow-500',
+    Spam: 'border-red-500 text-red-500',
+    General: 'border-gray-500 text-gray-500',
+    '': 'none',
+  };
 
   const defaultStyle = 'border-gray-500 text-gray-500';
   const currentStyle = type ? typeStyles[type] || defaultStyle : defaultStyle;
