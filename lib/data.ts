@@ -34,8 +34,8 @@ General   : If none of the above are matched, use General.
 export const colors = {
   Important: 'border-green-500 text-green-500',
   Social: 'border-blue-500 text-blue-500',
-  Promotions: 'border-yellow-500 text-yellow-500',
-  Marketing: 'border-orange-500 text-orange-500',
+  Promotions: 'border-[#800080] text-[#800080]',
+  Marketing: 'border-yellow-500 text-yellow-500',
   Spam: 'border-red-500 text-red-500',
   General: 'border-gray-500 text-gray-500',
   '': 'none',
