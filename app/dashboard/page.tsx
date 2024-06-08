@@ -47,7 +47,6 @@ export default function Home() {
   const [modifyData, setModifyData] = useState([
     {
       msg: '',
-      category: '',
       from: '',
       fullMsg: '',
     },
@@ -62,12 +61,17 @@ export default function Home() {
 
   const [emailType, setEmailType] = useState([]);
 
+  const apikey = localStorage.getItem('apiKey');
   const handleClassify = async () => {
-    const res = await axios.post(`/api/ai`, modifyData, {
-      headers: {
-        'Content-Type': 'application/json',
+    const res = await axios.post(
+      `/api/ai`,
+      { apikey, modifyData },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
     if (res.status === 200) setEmailType(res.data);
   };
 

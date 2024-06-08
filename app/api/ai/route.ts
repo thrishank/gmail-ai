@@ -1,49 +1,59 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
 
-const genAI = new GoogleGenerativeAI('AIzaSyDjJ9gUbceGyqZtubkJ3XeoyHY4vDgl_9I');
+async function classify(
+  emails: Array<{ text: string; fulltext?: string }>,
+  apikey: string,
+): Promise<Array<string | null>> {
+  const genAI = new GoogleGenerativeAI(apikey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  let prompt = `Classify the following emails into one of these six categories:
+  Important: Emails that are personal or work-related and require immediate attention.
+  Promotions: Emails related to sales, discounts, and marketing campaigns.
+                Social: Emails from social networks, friends, and family.
+                Marketing: Emails related to marketing, newsletters, and notifications.
+                Spam: Unwanted or unsolicited emails.
+                General: If none of the above are matched, use General.
+                Your answer should be just one word from the above for each email.
 
-async function classify(text: string): Promise<string | null> {
-  const prompt = `Classify the following email into one of this six categories 
-                  Important: Emails that are personal or work-related and require immediate attention
-                  Promotions: Emails related to sales, discounts, and marketing campaigns.
-                  Social: Emails from social networks, friends, and family.
-                  Marketing: Emails related to marketing, newsletters, and notifications.
-                  Spam: Unwanted or unsolicited emails.
-                  General: If none of the above are matched, use General 
-                  your answer should be just one word from the above
-                  here is the email you need to classify ${text}`;
+                Here are the emails:`;
+
+  emails.forEach((email, index) => {
+    prompt += `\n\nEmail ${index + 1}: ${email.text}`;
+    if (typeof email.fulltext === 'string') {
+      prompt += `\nFull text: ${Buffer.from(email.fulltext, 'base64').toString('utf-8')}`;
+    }
+  });
+
+  prompt += `\n\nReturn the results in a single line like this "Important, General, etc`;
+
   try {
     const result = await model.generateContent(prompt);
     const res = result.response;
-    return res.text();
+
+    const classifications = res
+      .text()
+      .split(',')
+      .map((item) => item.trim());
+    return classifications;
   } catch (err) {
-    console.error(`Error classifying text: ${text.substring(5000)}`, err);
-    return null;
+    console.error('Error classifying emails:', err);
+    return emails.map(() => null);
   }
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
-  const data: (string | null)[] = [];
-
+  const { modifyData, apikey } = await req.json();
   try {
-    const promises = body.map(async (item: any) => {
-      const fullMsg = item.fullMsg;
-      if (typeof fullMsg !== 'string') {
-        return null;
-      }
-      const type = await classify(
-        Buffer.from(item.fullMsg, 'base64').toString('utf-8'),
-      );
-      return type?.split(' ')[0] || '';
-    });
+    const emails = modifyData.map((item: any) => ({
+      text: item.msg,
+      fulltext: item.fullMsg,
+    }));
 
-    const resolvedTypes = await Promise.all(promises);
-    data.push(...resolvedTypes.filter((type): type is string => type !== null));
-
+    const resolvedTypes = await classify(emails, apikey);
+    const data = resolvedTypes.filter((type) => type !== 'Error');
+    console.log(data);
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     console.error(err);
