@@ -9,11 +9,11 @@ import { useEffect, useState } from 'react';
 import { PulseLoader } from 'react-spinners';
 
 export default function Home() {
-  const [selectedNumber, setSelectedNumber] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [lodaingtext, setLoadingtext] = useState('');
-  const [emailData, setEmailData] = useState([emailDataBody]);
-  const [modifyData, setModifyData] = useState([modifyDataBody]);
+  const [selectedNumber, setSelectedNumber] = useState(15); // Number of emails to fetch
+  const [loading, setLoading] = useState(false); // Loading state
+  const [lodaingtext, setLoadingtext] = useState(''); // Text to display while loading
+  const [emailData, setEmailData] = useState([emailDataBody]); // All the data of emails
+  const [modifyData, setModifyData] = useState([modifyDataBody]); // Extracting the required data from emailData
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedNumber(parseInt(event.target.value, 10));
@@ -24,6 +24,7 @@ export default function Home() {
     redirect('/signin');
   }
 
+  // Fetch the new set of emails when the selectedNumber changes
   useEffect(() => {
     async function getData() {
       setLoading(true);
@@ -49,6 +50,8 @@ export default function Home() {
             },
           },
         ]);
+        // The error mainly occurs due to token expirations
+        // So signout and login to get the new token
         signOut();
         redirect('signin/');
       }
@@ -118,10 +121,11 @@ export default function Home() {
             onChange={handleChange}
             className="focus:shadow-outline block w-full appearance-none rounded border border-gray-300 bg-white px-4 py-2 pr-8 leading-tight shadow hover:border-gray-500 focus:outline-none"
           >
-            <option value="5">5</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="50">50</option>
+            {[5, 15, 30, 50].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
           </select>
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
             <svg

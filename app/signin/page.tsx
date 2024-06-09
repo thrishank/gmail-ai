@@ -37,6 +37,7 @@ export default function Login() {
         <input
           type="text"
           placeholder="Enter your Gemini AI API key"
+          value={apikey}
           onChange={(e) => setApiKey(e.target.value)}
           required
           className="mb-4 w-full border border-black p-2"
@@ -59,7 +60,13 @@ export default function Login() {
               Google AI Studio
             </a>{' '}
             and create one or if your lazy just enter{' '}
-            <span className="font-bold">null</span> to use my api key
+            <span
+              className="cursor-pointer font-bold"
+              onClick={() => setApiKey('null')}
+            >
+              null
+            </span>{' '}
+            to use my api key
           </p>
           {/* <Image
             src={'/image.png'}
