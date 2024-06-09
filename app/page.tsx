@@ -1,7 +1,7 @@
 'use client';
 import { EmailCard } from '@/components/email';
 import { Top } from '@/components/top';
-import { emailDataBody } from '@/lib/data';
+import { emailDataBody, modifyDataBody } from '@/lib/data';
 import axios from 'axios';
 import { signOut, useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
@@ -9,17 +9,11 @@ import { useEffect, useState } from 'react';
 import { PulseLoader } from 'react-spinners';
 
 export default function Home() {
-  const [selectedNumber, setSelectedNumber] = useState(15);
+  const [selectedNumber, setSelectedNumber] = useState(1);
   const [loading, setLoading] = useState(false);
   const [lodaingtext, setLoadingtext] = useState('');
   const [emailData, setEmailData] = useState([emailDataBody]);
-  const [modifyData, setModifyData] = useState([
-    {
-      msg: '',
-      from: '',
-      fullMsg: '',
-    },
-  ]);
+  const [modifyData, setModifyData] = useState([modifyDataBody]);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedNumber(parseInt(event.target.value, 10));
@@ -101,6 +95,10 @@ export default function Home() {
           fullMsg:
             item.payload?.parts?.find((part) => part.mimeType === 'text/html')
               ?.body?.data || item.payload.body.data,
+
+          plaintext:
+            item.payload.parts?.find((part) => part.mimeType === 'text/plain')
+              ?.body?.data || '',
         };
       }),
     );

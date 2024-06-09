@@ -6,8 +6,9 @@ async function classify(
   emails: Array<{ text: string; fulltext?: string }>,
   apikey: string,
 ): Promise<Array<string | null>> {
+  const myapiKey = process.env.GOOGLE_AI_API_KEY;
   if (apikey === 'null') {
-    apikey = 'AIzaSyDjJ9gUbceGyqZtubkJ3XeoyHY4vDgl_9I';
+    apikey = myapiKey || '';
   }
 
   const genAI = new GoogleGenerativeAI(apikey);
@@ -17,9 +18,9 @@ async function classify(
 
   emails.forEach((email, index) => {
     prompt += `\n\nEmail ${index + 1}: ${email.text}`;
-    // if (typeof email.fulltext === 'string') {
-    //   prompt += `\nFull text: ${Buffer.from(email.fulltext, 'base64').toString('utf-8')}`;
-    // }
+    if (typeof email.fulltext === 'string') {
+      prompt += `\nFull text: ${Buffer.from(email.fulltext, 'base64').toString('utf-8')}`;
+    }
   });
 
   prompt += `\n\nReturn the results in a single line like this "Important, General, etc`;
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
   try {
     const emails = modifyData.map((item: any) => ({
       text: item.msg,
-      fulltext: item.fullMsg,
+      fulltext: item.plaintext,
     }));
 
     const resolvedTypes = await classify(emails, apikey);
