@@ -3,6 +3,8 @@
 This project is a Gmail AI application that uses Google's Generative AI and Google
 s Gemini API to classify emails into different categories. It integrates with Gmail to help users manage and organize their emails efficiently.
 
+### Demo
+
 ### Tech Stack & Key Features
 
 - **Frontend**: Built using Next.js and tailwind CSS for styling.
