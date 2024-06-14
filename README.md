@@ -1,3 +1,4 @@
+# To test the website DM your email to my twitter - 3thris
 ### Description
 
 This project is a Gmail AI application that uses Google's Generative AI and Google
