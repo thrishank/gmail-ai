@@ -68,7 +68,7 @@ export default function Login() {
             </span>{' '}
             to use my api key
           </p>
-          {/* <Image
+          <Image
             src={'/image.png'}
             width={400}
             height={100}
@@ -83,7 +83,7 @@ export default function Login() {
 
           <h2 className="mt-4 font-bold">
             To test the website click on the advanced and procced
-          </h2> */}
+          </h2>
         </div>
       </div>
     </div>

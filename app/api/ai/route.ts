@@ -52,7 +52,6 @@ export async function POST(req: Request) {
     const resolvedTypes = await classify(emails, apikey);
     const data = resolvedTypes.filter((type) => type !== 'Error');
 
-    console.log(data);
     return NextResponse.json(data, { status: 200 });
   } catch (err) {
     console.error(err);

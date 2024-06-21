@@ -15,7 +15,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   const gmail = google.gmail({ version: 'v1', auth });
 
-  //   return NextResponse.json(session)
   try {
     const response = await gmail.users.messages.list({
       userId: 'me',

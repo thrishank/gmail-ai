@@ -35,7 +35,6 @@ export const authoptions = {
         accessToken: token.accessToken,
         id: token.id,
       };
-      console.log(token.email);
       return session;
     },
     async jwt({ token, account, profile }: any) {
@@ -49,10 +48,6 @@ export const authoptions = {
 
       return token;
     },
-    // signIn: async ({ user, account, profile }: any) => {
-    //   console.log('FDasf');
-    //   console.log(user, account, profile);
-    // },
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
