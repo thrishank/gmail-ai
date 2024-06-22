@@ -5,6 +5,8 @@ s Gemini API to classify emails into different categories. It integrates with Gm
 
 ### Demo
 
+<video src="public/demo.mp4" width="320" height="240" controls></video>
+
 ### Tech Stack & Key Features
 
 - **Frontend**: Built using Next.js and tailwind CSS for styling.
