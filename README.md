@@ -1,6 +1,6 @@
 ### Description
 
-This project is a Gmail AI application that uses Google's Gmail AI and Google
+This project is a Gmail AI application that uses Google's Gmail API and Google
 s Gemini API to classify emails into different categories. It integrates with Gmail to help users manage and organize their emails efficiently.
 
 ### Demo
@@ -42,6 +42,12 @@ s Gemini API to classify emails into different categories. It integrates with Gm
    ```sh
    npm run dev
    ```
+
+## Using Docker
+
+```sh
+docker-compose up
+```
 
 ### File Structure
 
