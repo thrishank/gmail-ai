@@ -19,12 +19,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const response = await gmail.users.messages.list({
       userId: 'me',
       maxResults: maxMsgs,
-      q: 'to:me -from:me',
+      q: 'from:noreply@swiggy.in',
     });
     const messageIds = response.data.messages?.map((item) => item.id) || [];
     const messages = await Promise.all(
       messageIds.map(async (id) => {
         const msg = await gmail.users.messages.get({ userId: 'me', id: id! });
+        console.log(msg.data.id)
         return msg.data;
       }),
     );
