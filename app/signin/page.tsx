@@ -35,6 +35,7 @@ export default function Login() {
       'Successfully verified with World ID! Your nullifier hash is: ' +
         result.nullifier_hash,
     );
+    // await signIn();
     // This is where you should perform frontend actions once a user has been verified,
     // such as redirecting to a new page
   };
