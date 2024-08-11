@@ -6,6 +6,7 @@
  * Users can click on the Google login button to initiate the login process.
  */
 
+"use client"
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
