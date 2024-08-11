@@ -114,7 +114,6 @@ export default function Home() {
         email={session.data?.user?.email}
         img={session.data?.user?.picture}
       />
-      <div>{JSON.stringify(session)}</div>
       <div className="flex justify-evenly p-4">
         <div className="relative">
           <select

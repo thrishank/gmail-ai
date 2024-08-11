@@ -63,3 +63,6 @@ docker-compose up
 - `npm run build`: Builds the project for production.
 - `npm run start`: Starts the production server.
 
+### Additional Notes
+
+- Ensure to set up the required environment variables before running the application.

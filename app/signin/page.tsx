@@ -1,16 +1,29 @@
+/**
+ * This is the Signin page which  allows users to log in using their Google account.
+ * Users can enter their Gemini AI API key to authenticate.
+ * If the API key is provided, it is stored in localStorage.
+ * If the user is already authenticated, they are redirected to the homepage.
+ * Users can click on the Google login button to initiate the login process.
+ */
+
 'use client';
 import { signIn, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
+import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 
-import { VerificationLevel, IDKitWidget, useIDKit } from '@worldcoin/idkit';
-import type { ISuccessResult } from '@worldcoin/idkit';
-import { verify } from '../actions/verify';
-
 export default function Login() {
+  const [apikey, setApiKey] = useState('');
+
   const handleLogin = async () => {
-    await signIn('google');
-    redirect('/');
+    if (apikey.length > 0) {
+      await signIn('google');
+      localStorage.setItem('apiKey', apikey);
+      redirect('/');
+    } else {
+      alert('Enter your OpenAPI key');
+    }
   };
 
   const session = useSession();
@@ -18,40 +31,17 @@ export default function Login() {
     redirect('/');
   }
 
-  const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
-  const action = process.env.NEXT_PUBLIC_WLD_ACTION;
-
-  if (!app_id) {
-    throw new Error('app_id is not set in environment variables!');
-  }
-  if (!action) {
-    throw new Error('action is not set in environment variables!');
-  }
-
-  const { setOpen } = useIDKit();
-
-  const onSuccess = (result: ISuccessResult) => {
-    window.alert(
-      'Successfully verified with World ID! Your nullifier hash is: ' +
-        result.nullifier_hash,
-    );
-    // await signIn();
-    // This is where you should perform frontend actions once a user has been verified,
-    // such as redirecting to a new page
-  };
-
-  const handleProof = async (result: ISuccessResult) => {
-    const data = await verify(result);
-    if (data.success) {
-      // store data in db and implement authentication logic(JWT, Cookie)
-    } else {
-      throw new Error(`Verification failed: ${data.detail}`);
-    }
-  };
-
   return (
     <div className="flex h-screen items-center justify-center bg-slate-300">
       <div className="w-96 rounded-md bg-white p-4 text-center">
+        <input
+          type="text"
+          placeholder="Enter your Gemini AI API key"
+          value={apikey}
+          onChange={(e) => setApiKey(e.target.value)}
+          required
+          className="mb-4 w-full border border-black p-2"
+        />
         <button
           onClick={handleLogin}
           className="flex w-full items-center justify-center rounded border-2 bg-gray-300 p-2 font-bold text-black hover:border-black"
@@ -59,19 +49,42 @@ export default function Login() {
           <FcGoogle className="mr-2" />
           Login with Google
         </button>
-        <IDKitWidget
-          action={action}
-          app_id={app_id}
-          onSuccess={onSuccess}
-          handleVerify={handleProof}
-          verification_level={VerificationLevel.Device}
-        />
-        <button
-          className="m-4 rounded-md border border-black"
-          onClick={() => setOpen(true)}
-        >
-          <div className="mx-3 my-1">Verify with World ID</div>
-        </button>
+        <div className="p-4 font-normal">
+          <p>
+            To get the google gemini API key go to the{' '}
+            <a
+              href="https://aistudio.google.com/app/apikey"
+              target="blank"
+              className="text-blue-500 underline"
+            >
+              Google AI Studio
+            </a>{' '}
+            and create one or if your lazy just enter{' '}
+            <span
+              className="cursor-pointer font-bold"
+              onClick={() => setApiKey('null')}
+            >
+              null
+            </span>{' '}
+            to use my api key
+          </p>
+          <Image
+            src={'/image.png'}
+            width={400}
+            height={100}
+            alt="google verfication"
+            className="mt-4 border-4 border-black"
+          />
+          <h3 className="mt-4 text-red-500">
+            you will see this screen while logging using the google this is
+            because google takes time to verify the app anyway i am not storing
+            any data so your good.
+          </h3>
+
+          <h2 className="mt-4 font-bold">
+            To test the website click on the advanced and procced
+          </h2>
+        </div>
       </div>
     </div>
   );
