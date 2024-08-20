@@ -44,9 +44,9 @@ export default function Login() {
             className="mt-4 border-4 border-black"
           />
           <h3 className="mt-4 text-red-500">
-            you will see this screen while logging using the google this is
-            because google takes time to verify the app anyway i am not storing
-            any data so your good.
+            you will see this screen while signIn this is
+            because google takes time to verify the app,  anyway i am not storing
+            any of your data so you good.
           </h3>
 
           <h2 className="mt-4 font-bold">
