@@ -9,7 +9,7 @@ This project is a Gmail AI application that uses Google's Gmail API and Gemini A
 - **Frontend**: Built using Next.js and tailwind CSS for styling.
 - **Backend**: Next.js API routes
 - **Authentication**: Implements Google Oauth user authentication using next-auth.
-- **Integration**: Get's the last X emails of the user using the Gmail API and Uses Google's Gemini API for email classification.
+- **Integration**: Get's the last X number of emails of the user using the Gmail API and Uses Google's Gemini API for email classification.
 - **Email Classification**: Classifies emails into predefined categories such as Important, Promotions, Social, Marketing, Spam, and General.
 - **User Interface**: Provides an intuitive interface for users to view and classify their emails.
 
